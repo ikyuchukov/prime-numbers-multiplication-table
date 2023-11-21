@@ -1,6 +1,7 @@
 FROM php:8.2-fpm-bullseye
-RUN apt update && apt install -y --no-install-recommends git zip unzip libicu-dev
+RUN apt update && apt install -y --no-install-recommends git zip unzip libicu-dev vim
 RUN pecl zip
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN docker-php-ext-install bcmath intl
 RUN curl --silent --show-error https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
