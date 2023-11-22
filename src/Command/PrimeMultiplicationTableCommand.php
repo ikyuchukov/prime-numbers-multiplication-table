@@ -37,7 +37,9 @@ class PrimeMultiplicationTableCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $primeNumbers =$this->primeNumberFinder->find((int) $input->getArgument('number'));
+        $primeNumbers = $this->primeNumberFinder->findPrimeNumbers((int) $input->getArgument('number'));
+        $multiplicationTable = $t
+
         $output->writeln([
             'Prime Multiplication Table',
             '===========================',

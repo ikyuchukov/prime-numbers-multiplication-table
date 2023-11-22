@@ -11,29 +11,16 @@ class SieveOfAtkinPrimeNumberFinder implements PrimeNumberFinderInterface
 {
     private const KNOWN_PRIMES = [2, 3];
 
-//    /**
-//     * 4x^2 + y^2
-//     */
-//    private const FOUR_X_SQUARED_PLUS_Y_SQUARED_MODULO_REMINDERS = [1, 13, 17, 29, 37, 41, 49, 53];
-//
-//    /**
-//     * 3x^2 + y^2
-//     */
-//    private const THREE_X_SQUARED_PLUS_Y_SQUARED_MODULO_REMINDERS = [7, 19, 31, 43];
-//
-//    /**
-//     * 3x^2 - y^2
-//     */
-//    private const THREE_X_SQUARED_MINUS_Y_SQUARED_MODULO_REMINDERS = [11, 23, 47, 59];
+    public function __construct(
+        private readonly PrimeNumberApproximateUpperBoundFinder $primeNumberApproximateUpperBoundFinder
+    ) {
+    }
 
-    private const INITIAL_LIMIT = 30;
-
-
-    public function find(int $amountOfNumbersToFind): array
+    public function findPrimeNumbers(int $amountOfNumbersToFind): array
     {
         $numberList = [2 => true, 3 => true];
         $primeNumbers = self::KNOWN_PRIMES;
-        $limit = $this->computeLimit($amountOfNumbersToFind);
+        $limit = $this->primeNumberApproximateUpperBoundFinder->findUpperBound($amountOfNumbersToFind);
         while (count($primeNumbers) < $amountOfNumbersToFind) {
             for ($x = 1; $x * $x < $limit; $x++) {
                 for ($y = 1; $y * $y < $limit; $y++) {
@@ -60,9 +47,7 @@ class SieveOfAtkinPrimeNumberFinder implements PrimeNumberFinderInterface
             }
         }
 
-        ksort($numberList);
-        dd($primeNumbers);
-        dd($numberList);
+        return array_slice($primeNumbers, 0, $amountOfNumbersToFind);
     }
 
     private function attemptFirstFlip(int $x, int $y, array &$numberList): void
@@ -90,10 +75,5 @@ class SieveOfAtkinPrimeNumberFinder implements PrimeNumberFinderInterface
         if ($x > $y && $modulo === 11) {
             $numberList[$number] = !isset($numberList[$number]) || !$numberList[$number];
         }
-    }
-
-    private function computeLimit(int $amountOfNumbersToFind): int
-    {
-        return (int) ceil($amountOfNumbersToFind * log($amountOfNumbersToFind) + $amountOfNumbersToFind * log(log($amountOfNumbersToFind)));
     }
 }

@@ -7,5 +7,5 @@ interface PrimeNumberFinderInterface
     /**
      * @return int[]
      */
-    public function find(int $amountOfNumbersToFind): array;
+    public function findPrimeNumbers(int $amountOfNumbersToFind): array;
 }
