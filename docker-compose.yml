@@ -2,9 +2,6 @@ version: '3.3'
 volumes:
   db_data: {}
 
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
 services:
   prime-multiplication-table-php:
     container_name: prime-multiplication-table-php

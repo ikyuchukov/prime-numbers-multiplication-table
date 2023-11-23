@@ -2,14 +2,26 @@ Prime Multiplication Table Homework Task
 
 
 ## Installation
-Run ```docker-compose up -d``` to build the images and run the PHP and MySQL containers.
+**To build the images and run the PHP and MySQL containers run:**
+```
+docker-compose up -d
+```
+
+
+**Run the migrations :**
+```
+docker exec -it prime-multiplication-table /bin/bash
+bin/console doctrine:migrations:migrate --no-interaction
+```
 
 ## Usage
 You can enter the docker container by running ```docker exec -it prime-multiplication-table /bin/bash``` 
 
 Once inside the container, you can run the following command:
 
-```bin/console prime-multiplication-table 10```
+```
+bin/console prime-multiplication-table 10
+```
 
 This will generate a multiplication table of the first 10 prime numbers.
 

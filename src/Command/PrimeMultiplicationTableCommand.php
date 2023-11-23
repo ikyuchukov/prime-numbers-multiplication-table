@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\SieveOfAtkinPrimeNumberFinder;
+use App\Service\PrimeNumberFinderInterface;
 use App\Service\TableCalculator;
 use App\Service\VisualizationDtoBuilder;
 use App\Service\VisualizationFactory;
@@ -27,7 +27,7 @@ class PrimeMultiplicationTableCommand extends Command
 
     public function __construct(
         //todo change this to interface
-        private readonly SieveOfAtkinPrimeNumberFinder $primeNumberFinder,
+        private readonly PrimeNumberFinderInterface $primeNumberFinder,
         private readonly TableCalculator $tableCalculator,
         private readonly EntityManagerInterface $entityManager,
         private readonly VisualizationDtoBuilder $visualisationDtoBuilder,
