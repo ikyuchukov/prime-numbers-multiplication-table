@@ -6,6 +6,8 @@ namespace App\Command;
 use App\Service\SieveOfAtkinPrimeNumberFinder;
 use App\Service\TableCalculator;
 use App\Service\VisualizationDtoBuilder;
+use App\Service\VisualizationFactory;
+use App\VisualizationDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -28,7 +30,8 @@ class PrimeMultiplicationTableCommand extends Command
         private readonly SieveOfAtkinPrimeNumberFinder $primeNumberFinder,
         private readonly TableCalculator $tableCalculator,
         private readonly EntityManagerInterface $entityManager,
-        private readonly VisualizationDtoBuilder $visualisationDtoBuilder
+        private readonly VisualizationDtoBuilder $visualisationDtoBuilder,
+        private readonly VisualizationFactory $visualizationFactory,
     ) {
         parent::__construct();
     }
@@ -57,13 +60,18 @@ class PrimeMultiplicationTableCommand extends Command
         $calculatedTable = $this->tableCalculator->calculateTable($primeNumbers, $input->getOption('operation'));
         $visualizationDto = $this->visualisationDtoBuilder->buildVisualizationDto($primeNumbers, $calculatedTable);
 
-        $this->entityManager->persist($this->visualizationFactory->createFromDto($visualizationDto));
+        $this->entityManager->persist($this->visualizationFactory->createFromDto($visualizationDto, $input->getOption('operation')));
         $this->entityManager->flush();
 
+        $this->showTable($visualizationDto, $output);
+
+        return Command::SUCCESS;
+    }
+
+    private function showTable(VisualizationDto $visualizationDto, OutputInterface $output): void
+    {
         foreach ($visualizationDto->getTable() as $row) {
             $output->writeln(implode(' ', $row));
         }
-
-        return Command::SUCCESS;
     }
 }

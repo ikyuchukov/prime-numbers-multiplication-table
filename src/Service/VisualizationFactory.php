@@ -2,19 +2,19 @@
 
 namespace App\Service;
 
+use App\Entity\Visualization;
 use App\VisualizationDto;
 
 class VisualizationFactory
 {
-    public function createFromDto(VisualizationDto $visualizationDto)
+    public function createFromDto(VisualizationDto $visualizationDto, string $operation): Visualization
     {
-        $table = $visualizationDto->getTable();
-        $tableString = '';
-        foreach ($table as $row) {
-            $tableString .= implode(' ', $row) . PHP_EOL;
-        }
+        $visualization = new Visualization();
+        $visualization->setNumbers($visualizationDto->getTable()[0] ?? []);
+        $visualization->setOperation($operation);
+        $visualization->setVisualizationTable($visualizationDto->getTable());
 
-        return $tableString;
+        return $visualization;
     }
 
 }
