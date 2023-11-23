@@ -10,4 +10,4 @@ ARG GID=1000
 RUN groupadd -g $GID $UNAME
 RUN useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
 USER $UNAME
-CMD bash -c "composer install && php-fpm"
+CMD bash -c "composer install && bin/console doctrine:migrations:migrate --no-interaction && php-fpm"
