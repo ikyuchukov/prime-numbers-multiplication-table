@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\PrimeNumberFinder;
 use App\Service\SieveOfAtkinPrimeNumberFinder;
+use App\Service\TableCalculator;
+use App\Service\VisualizationDtoBuilder;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,8 +23,13 @@ class PrimeMultiplicationTableCommand extends Command
 {
     private const DEFAULT_OPERATION = '*';
 
-    public function __construct(private readonly SieveOfAtkinPrimeNumberFinder $primeNumberFinder)
-    {
+    public function __construct(
+        //todo change this to interface
+        private readonly SieveOfAtkinPrimeNumberFinder $primeNumberFinder,
+        private readonly TableCalculator $tableCalculator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly VisualizationDtoBuilder $visualisationDtoBuilder
+    ) {
         parent::__construct();
     }
 
@@ -31,26 +38,32 @@ class PrimeMultiplicationTableCommand extends Command
         $this
             ->setHelp('This command allows you to generate a multiplication table of the first N prime numbers.')
             ->addArgument('number', InputArgument::REQUIRED, 'The number of prime numbers to generate.')
-            ->addOption('operation', null, InputArgument::OPTIONAL, 'The operation to perform on the prime numbers.', self::DEFAULT_OPERATION)
+            ->addArgument('no-table', InputArgument::OPTIONAL, 'Do not show the multiplication table', false)
+            ->addOption('operation', 'o', InputArgument::OPTIONAL, 'The operation to perform on the prime numbers.', self::DEFAULT_OPERATION)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $primeNumbers = $this->primeNumberFinder->findPrimeNumbers((int) $input->getArgument('number'));
-        $multiplicationTable = $t
 
-        $output->writeln([
-            'Prime Multiplication Table',
-            '===========================',
-            '',
-            $input->getArgument('number'),
-            $input->getOption('operation'),
-        ]);
-        $output->writeln($primeNumbers);
+        if ((bool) $input->getArgument('no-table') === true) {
+            foreach ($primeNumbers as $primeNumber) {
+                $output->write($primeNumber . ' ');
+            }
+            return Command::SUCCESS;
+        }
+
+        $calculatedTable = $this->tableCalculator->calculateTable($primeNumbers, $input->getOption('operation'));
+        $visualizationDto = $this->visualisationDtoBuilder->buildVisualizationDto($primeNumbers, $calculatedTable);
+
+        $this->entityManager->persist($this->visualizationFactory->createFromDto($visualizationDto));
+        $this->entityManager->flush();
+
+        foreach ($visualizationDto->getTable() as $row) {
+            $output->writeln(implode(' ', $row));
+        }
 
         return Command::SUCCESS;
     }
-
-
 }
