@@ -54,6 +54,12 @@ bin/console pmt 100 --operation='- 5 * 23 / 7'
 bin/console pmt 100000 --no-table
 ```
 
+## Tests
+To run tests simply run the following command:
+```
+vendor/bin/phpunit
+```
+Note: Latest prophecy is broken on the latest PHPUnit hence why non-prophecy mocks are used
 ## Complexity
 Raw complexity of the prime number generator algorithm is  O(N) where n is the number of prime numbers to generate.
 With space complexity of O(N) as well.
