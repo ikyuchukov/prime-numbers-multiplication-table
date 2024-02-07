@@ -1,5 +1,13 @@
 Prime Multiplication Table Homework Task
 
+## About 
+This will calculate the **first N prime numbers** using the Sieve of Atkin, create a multiplication table for them and save the table in a database.
+
+The operation used by the multiplicatio table can be a user specified one.
+
+Sieve of Atkin reference:
+
+https://www.ams.org/journals/mcom/2004-73-246/S0025-5718-03-01501-1/S0025-5718-03-01501-1.pdf
 
 ## Installation
 **To build the images and run the PHP and MySQL containers run:**
