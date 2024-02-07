@@ -28,7 +28,7 @@ You can enter the docker container by running ```docker exec -it prime-multiplic
 Once inside the container, you can run the following command:
 
 ```
-bin/console prime-multiplication-table 10
+bin/console app:prime-multiplication-table 10
 ```
 
 This will generate a multiplication table of the first 10 prime numbers.
